@@ -2,7 +2,8 @@ import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 
 const Tab = () => {
-  const { textType, setTextType, timer, setTimer } = useContext(AppContext);
+  const { textType, setTextType, initialTimer, setInitialTimer } =
+    useContext(AppContext);
 
   return (
     <nav className="bg-[#2c2e32] w-[80%] text-white flex justify-around m-auto rounded-sm">
@@ -37,16 +38,16 @@ const Tab = () => {
       <ul className="flex">
         <li
           className={`mr-5 text-sm cursor-pointer ${
-            timer == 15 ? "text-[#ddb800]" : ""
+            initialTimer == 15 ? "text-[#ddb800]" : ""
           }`}
-          onClick={() => setTimer(15)}
+          onClick={() => setInitialTimer(15)}
         >
           15
         </li>
         <li
-          onClick={() => setTimer(30)}
+          onClick={() => setInitialTimer(30)}
           className={`mr-5 text-sm cursor-pointer ${
-            timer == 30 ? "text-[#ddb800]" : ""
+            initialTimer == 30 ? "text-[#ddb800]" : ""
           }`}
         >
           30

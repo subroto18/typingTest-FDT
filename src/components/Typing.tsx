@@ -2,25 +2,37 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { AppContext } from "../context/AppContext";
 
 const Typing = () => {
-  const { originalValue, typeStart, setTypeStart } = useContext(AppContext);
+  const {
+    originalValue,
+    typeStart,
+    setTypeStart,
+    typingValue,
+    setTypingValue,
+    accuracy,
+    setAccuracy,
+    timer,
+    setTimer,
+    initialTimer,
+  } = useContext(AppContext);
   const inputRef = useRef(null);
   const styledTextRef = useRef(null);
   const intervalRef = useRef(null); // Store interval ID
-  const [accuracy, setAccuracy] = useState(100);
-  const [typingValue, setTypingValue] = useState("");
-  const [timer, setTimer] = useState(10);
+
   const [startTime, setStartTime] = useState(null);
   const [wpm, setWpm] = useState(0);
 
-  const handleChange = (e) => {
-    if (startTime == null) {
+  const handleTyping = () => {
+    if (!typeStart) {
+      startTimer();
       setStartTime(Date.now());
     }
+  };
 
-    setTypingValue(e.target.value);
+  const handleChange = (e) => {
+    // start typing
+    handleTyping();
 
     const inputValue = e.target.value;
-
     styledTextRef.current.innerHTML = ""; // Clear previous content
 
     inputValue.split("").forEach((char, index) => {
@@ -42,8 +54,6 @@ const Typing = () => {
     setAccuracy(Math.floor((correctChars / originalValue.length) * 100));
   };
 
-  const handleInterval = () => {};
-
   const startTimer = () => {
     if (intervalRef.current) return; // Prevent multiple intervals
 
@@ -54,7 +64,7 @@ const Typing = () => {
           clearInterval(intervalRef.current);
           intervalRef.current = null;
           setTypeStart(false);
-          setTimer(10);
+          setTimer(initialTimer);
           return 0;
         }
         return prev - 1;
