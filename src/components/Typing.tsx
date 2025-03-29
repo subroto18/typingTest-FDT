@@ -8,63 +8,81 @@ const Typing = () => {
     setTypeStart,
     typingValue,
     setTypingValue,
-    accuracy,
+    setUserTypedValue,
+    userTypedValue,
     setAccuracy,
     timer,
     setTimer,
     initialTimer,
+    setWpm,
+    startTime,
+    setStartTime,
   } = useContext(AppContext);
   const inputRef = useRef(null);
   const styledTextRef = useRef(null);
   const intervalRef = useRef(null); // Store interval ID
+  const startTimeRef = useRef(null);
 
-  const [startTime, setStartTime] = useState(null);
-  const [wpm, setWpm] = useState(0);
+  const typingValueRef = useRef("");
 
   const handleTyping = () => {
     if (!typeStart) {
       startTimer();
       setStartTime(Date.now());
+      startTimeRef.current = Date.now(); // Store latest time in ref
+      setAccuracy(null);
+      setWpm(null);
     }
   };
 
   const handleChange = (e) => {
+    setTypingValue(e.target.value);
+    setUserTypedValue(e.target.value);
+
     // start typing
     handleTyping();
-
     const inputValue = e.target.value;
+    typingValueRef.current = inputValue; // Store latest value in ref
     styledTextRef.current.innerHTML = ""; // Clear previous content
-
     inputValue.split("").forEach((char, index) => {
       const span = document.createElement("span");
       span.textContent = char;
-      span.style.color = originalValue[index] == char ? "white" : "red"; // Cycle through colors
+      span.style.color = originalValue[index] == char ? "white" : "red";
       styledTextRef.current.appendChild(span);
     });
   };
 
-  const handleSubmit = () => {
-    const timeTaken = (Date.now() - startTime) / 1000 / 60; // Convert ms to minutes
-    const wordsTyped = typingValue.split(" ").length;
+  const calculateResult = () => {
+    const currentTypingValue = typingValueRef.current; // Get latest value
+    const timeTaken = (Date.now() - startTimeRef.current) / 1000 / 60; // Convert ms to minutes
+    const wordsTyped = currentTypingValue.split(" ").length;
     setWpm(Math.round(wordsTyped / timeTaken));
-
-    let correctChars = typingValue?.split("").filter((char, index) => {
+    let correctChars = currentTypingValue?.split("").filter((char, index) => {
       return char === originalValue[index];
     }).length;
+
     setAccuracy(Math.floor((correctChars / originalValue.length) * 100));
   };
 
   const startTimer = () => {
     if (intervalRef.current) return; // Prevent multiple intervals
-
     setTypeStart(true);
+
     intervalRef.current = setInterval(() => {
       setTimer((prev) => {
         if (prev === 0) {
+          // clear all state
+
           clearInterval(intervalRef.current);
           intervalRef.current = null;
           setTypeStart(false);
           setTimer(initialTimer);
+          setUserTypedValue(typingValue);
+          // calculate result
+          calculateResult();
+
+          // setTypingValue("");
+
           return 0;
         }
         return prev - 1;
@@ -74,12 +92,11 @@ const Typing = () => {
 
   return (
     <div className="w-[80%] m-auto ">
-      <div className="mt-10">
-        <h2 className="text-2xl text-[#ddb800]"> {timer}</h2>
-      </div>
-
       <form className="my-10 w-full h-[300px] m-auto">
-        <div className="relative">
+        <div className="h-10">
+          {typeStart && <h2 className="text-2xl text-[#ddb800]"> {timer}</h2>}
+        </div>
+        <div className=" relative">
           <p
             ref={inputRef}
             className="block p-2.5 w-full text-xl text-[#64666a] rounded-lg  border-gray-300 focus:ring-blue-500 focus:border-0 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white transition-all border-0 outline-none  absolute"
@@ -100,9 +117,6 @@ const Typing = () => {
           />
         </div>
       </form>
-      <p>{accuracy}</p>
-      <p>{wpm}</p>
-      <button onClick={handleSubmit}>SUbmit</button>
     </div>
   );
 };

@@ -4,14 +4,16 @@ const AppContext = createContext({});
 
 const AppProvider = ({ children }) => {
   const [textType, setTextType] = useState("normal");
-  const [initialTimer, setInitialTimer] = useState(30);
+  const [initialTimer, setInitialTimer] = useState(15);
   const [timer, setTimer] = useState(initialTimer);
   const [originalText, setOriginalText] = useState("");
   const [typeStart, setTypeStart] = useState(false);
   const [startTime, setStartTime] = useState(null);
-  const [accuracy, setAccuracy] = useState(100);
+  const [accuracy, setAccuracy] = useState(null);
   const [typingValue, setTypingValue] = useState("");
-  const [wpm, setWpm] = useState(0);
+  const [userTypedValue, setUserTypedValue] = useState(""); // store user typed
+
+  const [wpm, setWpm] = useState(null);
 
   useEffect(() => {
     let textIndex = Math.floor(Math.random() * textJSON.length);
@@ -39,6 +41,8 @@ const AppProvider = ({ children }) => {
         setAccuracy,
         typingValue,
         setTypingValue,
+        userTypedValue,
+        setUserTypedValue,
         startTime,
         setStartTime,
         wpm,

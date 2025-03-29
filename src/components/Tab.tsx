@@ -6,7 +6,7 @@ const Tab = () => {
     useContext(AppContext);
 
   return (
-    <nav className="bg-[#2c2e32] w-[80%] text-white flex justify-around m-auto rounded-sm">
+    <nav className="bg-[#2c2e32] h-[2rem] pt-1.5 w-[80%] text-white flex justify-around m-auto rounded-sm">
       <ul className="flex ">
         <li
           onClick={() => setTextType("punctuation")}
@@ -38,11 +38,11 @@ const Tab = () => {
       <ul className="flex">
         <li
           className={`mr-5 text-sm cursor-pointer ${
-            initialTimer == 15 ? "text-[#ddb800]" : ""
+            initialTimer == 5 ? "text-[#ddb800]" : ""
           }`}
-          onClick={() => setInitialTimer(15)}
+          onClick={() => setInitialTimer(5)}
         >
-          15
+          5
         </li>
         <li
           onClick={() => setInitialTimer(30)}
