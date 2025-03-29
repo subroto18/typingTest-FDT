@@ -38,11 +38,11 @@ const Tab = () => {
       <ul className="flex">
         <li
           className={`mr-5 text-sm cursor-pointer ${
-            initialTimer == 5 ? "text-[#ddb800]" : ""
+            initialTimer == 15 ? "text-[#ddb800]" : ""
           }`}
-          onClick={() => setInitialTimer(5)}
+          onClick={() => setInitialTimer(15)}
         >
-          5
+          15
         </li>
         <li
           onClick={() => setInitialTimer(30)}
